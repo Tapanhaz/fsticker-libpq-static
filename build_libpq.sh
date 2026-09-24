@@ -72,14 +72,7 @@ case "${PLATFORM}" in
 esac
 
 echo "==> collecting static library"
-case "${PLATFORM}" in
-    windows-*)
-        LIB_SRC=$(find "${BUILD_DIR}/src/interfaces/libpq" -maxdepth 1 -name 'libpq.a' | head -n1)
-        ;;
-    *)
-        LIB_SRC=$(find "${BUILD_DIR}/src/interfaces/libpq" -maxdepth 1 -name 'libpq.a' | head -n1)
-        ;;
-esac
+LIB_SRC=$(find "${BUILD_DIR}/src/interfaces/libpq" -maxdepth 1 -name 'libpq.a' | head -n1)
 
 if [[ -z "${LIB_SRC}" || ! -f "${LIB_SRC}" ]]; then
     echo "ERROR: could not locate built static libpq under ${BUILD_DIR}/src/interfaces/libpq" >&2
