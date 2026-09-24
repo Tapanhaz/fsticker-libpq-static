@@ -60,20 +60,21 @@ echo "==> meson setup"
 meson "${MESON_ARGS[@]}"
 
 echo "==> ninja build (libpq only)"
-ninja -C "${BUILD_DIR}" -t targets | grep -i 'libpq\.a\|libpq\.lib' >&2 || true
+LIBPQ_TARGET="src/interfaces/libpq/libpq.a"
 case "${PLATFORM}" in
     windows-*)
-        meson compile -C "${BUILD_DIR}"
+        LIBPQ_TARGET="src/interfaces/libpq/libpq.lib"
+        meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGET}"
         ;;
     *)
-        ninja -C "${BUILD_DIR}"
+        ninja -C "${BUILD_DIR}" "${LIBPQ_TARGET}"
         ;;
 esac
 
 echo "==> collecting static library"
 case "${PLATFORM}" in
     windows-*)
-        LIB_SRC=$(find "${BUILD_DIR}/src/interfaces/libpq" -maxdepth 1 -name 'libpq.a' -o -name 'pq.lib' | head -n1)
+        LIB_SRC=$(find "${BUILD_DIR}/src/interfaces/libpq" -maxdepth 1 -name 'libpq.a' -o -name 'libpq.lib' | head -n1)
         ;;
     *)
         LIB_SRC=$(find "${BUILD_DIR}/src/interfaces/libpq" -maxdepth 1 -name 'libpq.a' | head -n1)
