@@ -61,24 +61,35 @@ meson "${MESON_ARGS[@]}"
 
 
 echo "==> ninja build (libpq only)"
-LIBPQ_TARGET="libpq:static_library"
+LIBPQ_TARGETS=(
+    "libpq:static_library"
+    "pgcommon:static_library"
+    "pgport:static_library"
+)
 case "${PLATFORM}" in
     windows-*)
-        meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGET}"
+        meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGETS[@]}"
         ;;
     *)
-        meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGET}"
+        meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGETS[@]}"
         ;;
 esac
 
 echo "==> collecting static library"
-LIB_SRC=$(find "${BUILD_DIR}/src/interfaces/libpq" -maxdepth 1 -name 'libpq.a' | head -n1)
-
-if [[ -z "${LIB_SRC}" || ! -f "${LIB_SRC}" ]]; then
-    echo "ERROR: could not locate built static libpq under ${BUILD_DIR}/src/interfaces/libpq" >&2
-    exit 1
-fi
-cp "${LIB_SRC}" "${DIST_DIR}/lib/$(basename "${LIB_SRC}")"
+for pair in \
+    "src/interfaces/libpq:libpq.a" \
+    "src/common:libpgcommon.a" \
+    "src/port:libpgport.a"
+do
+    subdir="${pair%%:*}"
+    libname="${pair##*:}"
+    LIB_SRC=$(find "${BUILD_DIR}/${subdir}" -maxdepth 1 -name "${libname}" | head -n1)
+    if [[ -z "${LIB_SRC}" || ! -f "${LIB_SRC}" ]]; then
+        echo "ERROR: could not locate ${libname} under ${BUILD_DIR}/${subdir}" >&2
+        exit 1
+    fi
+    cp "${LIB_SRC}" "${DIST_DIR}/lib/${libname}"
+done
 
 echo "==> collecting headers"
 cp "${SRC_DIR}/src/interfaces/libpq/libpq-fe.h"        "${DIST_DIR}/include/"
