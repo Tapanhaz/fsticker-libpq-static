@@ -63,9 +63,8 @@ meson "${MESON_ARGS[@]}"
 echo "==> ninja build (libpq only)"
 LIBPQ_TARGETS=(
     "libpq:static_library"
-    "pgcommon:static_library"
-    "pgport:static_library"
-)
+    "pgcommon_shlib:static_library"
+    "pgport_shlib:static_library"
 case "${PLATFORM}" in
     windows-*)
         meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGETS[@]}"
