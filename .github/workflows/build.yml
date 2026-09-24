@@ -74,6 +74,10 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           choco install winflexbison3 -y
+          refreshenv
+          where win_flex.exe
+          where win_bison.exe
+          echo "C:\ProgramData\chocolatey\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           python -m pip install meson ninja
       - name: Build static libpq
         run: bash build_libpq.sh "${{ needs.prepare.outputs.pg_tag }}" "${{ matrix.name }}"
