@@ -18,7 +18,7 @@ rm -rf "${SRC_DIR}" "${BUILD_DIR}" "${DIST_DIR}"
 mkdir -p "${DIST_DIR}/include" "${DIST_DIR}/lib"
 
 echo "==> Fetching postgres @ ${PG_TAG}"
-git clone --branch "${PG_TAG}" --depth 1 \
+git clone -c core.autocrlf=false --branch "${PG_TAG}" --depth 1 \
     https://github.com/postgres/postgres.git "${SRC_DIR}"
 
 
