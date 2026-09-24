@@ -60,7 +60,13 @@ echo "==> meson setup"
 meson "${MESON_ARGS[@]}"
 
 echo "==> introspecting targets"
-meson introspect --targets "${BUILD_DIR}" | grep -i libpq >&2 || true
+meson introspect --targets "${BUILD_DIR}" | python3 -c "
+import json, sys
+targets = json.load(sys.stdin)
+for t in targets:
+    if 'libpq' in t['name'].lower():
+        print(t['name'], '|', t['id'], '|', t['filename'])
+" >&2 || true
 
 
 echo "==> ninja build (libpq only)"
