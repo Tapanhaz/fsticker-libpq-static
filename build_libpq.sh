@@ -59,6 +59,16 @@ esac
 echo "==> meson setup"
 meson "${MESON_ARGS[@]}"
 
+echo "==> introspecting common/port targets"
+meson introspect --targets "${BUILD_DIR}" | python3 -c "
+import json, sys
+targets = json.load(sys.stdin)
+for t in targets:
+    n = t['name'].lower()
+    if 'pgcommon' in n or 'pgport' in n:
+        print(t['name'], '|', t['id'], '|', t['type'], '|', t['filename'])
+" >&2 || true
+
 
 echo "==> ninja build (libpq only)"
 LIBPQ_TARGETS=(
