@@ -26,7 +26,7 @@ MESON_ARGS=(
     setup "${BUILD_DIR}" "${SRC_DIR}"
     --buildtype=release
     -Ddefault_library=static
-    -Dssl=disabled
+    -Dssl=none
     -Dgssapi=disabled
     -Dldap=disabled
     -Dpam=disabled
