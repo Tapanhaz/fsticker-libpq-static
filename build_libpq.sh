@@ -61,13 +61,13 @@ meson "${MESON_ARGS[@]}"
 
 
 echo "==> ninja build (libpq only)"
-LIBPQ_TARGET="src/interfaces/libpq/libpq.a"
+LIBPQ_TARGET="libpq:static_library"
 case "${PLATFORM}" in
     windows-*)
         meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGET}"
         ;;
     *)
-        ninja -C "${BUILD_DIR}" "${LIBPQ_TARGET}"
+        meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGET}"
         ;;
 esac
 
