@@ -70,24 +70,22 @@ for t in targets:
 " >&2 || true
 
 
-echo "==> ninja build (libpq only)"
+echo "==> compiling libpq target"
 LIBPQ_TARGETS=(
     "libpq:static_library"
-    "pgcommon_shlib:static_library"
-    "pgport_shlib:static_library"
-case "${PLATFORM}" in
-    windows-*)
-        meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGETS[@]}"
-        ;;
-    *)
-        meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGETS[@]}"
-        ;;
-esac
+    "libpgcommon:static_library"
+    "libpgcommon_ryu:static_library"
+    "libpgcommon_config_info:static_library"
+    "libpgport:static_library"
+)
+meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGETS[@]}"
 
 echo "==> collecting static library"
 for pair in \
     "src/interfaces/libpq:libpq.a" \
     "src/common:libpgcommon.a" \
+    "src/common:libpgcommon_ryu.a" \
+    "src/common:libpgcommon_config_info.a" \
     "src/port:libpgport.a"
 do
     subdir="${pair%%:*}"
