@@ -50,6 +50,9 @@ case "${PLATFORM}" in
     windows-*)
         MESON_ARGS+=(--vsenv)
         ;;
+    macos-*)
+        export MACOSX_DEPLOYMENT_TARGET=15.4
+        ;;
 esac
 
 echo "==> meson setup"
