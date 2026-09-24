@@ -56,7 +56,7 @@ echo "==> meson setup"
 meson "${MESON_ARGS[@]}"
 
 echo "==> ninja build (libpq only)"
-ninja -C "${BUILD_DIR}" src/interfaces/libpq
+ninja -C "${BUILD_DIR}"
 
 echo "==> collecting static library"
 case "${PLATFORM}" in
