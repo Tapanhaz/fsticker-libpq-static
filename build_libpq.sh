@@ -49,6 +49,7 @@ MESON_ARGS=(
 case "${PLATFORM}" in
     windows-*)
         MESON_ARGS+=(--vsenv)
+        export PATH="/c/Strawberry/perl/bin:${PATH}"
         ;;
     macos-*)
         export MACOSX_DEPLOYMENT_TARGET=15.4
