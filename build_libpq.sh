@@ -59,15 +59,17 @@ esac
 echo "==> meson setup"
 meson "${MESON_ARGS[@]}"
 
+echo "==> introspecting targets"
+meson introspect --targets "${BUILD_DIR}" | grep -i libpq >&2 || true
+
+
 echo "==> ninja build (libpq only)"
-LIBPQ_TARGET="src/interfaces/libpq/libpq.a"
 case "${PLATFORM}" in
     windows-*)
-        LIBPQ_TARGET="src/interfaces/libpq/libpq.lib"
-        meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGET}"
+        meson compile -C "${BUILD_DIR}" 
         ;;
     *)
-        ninja -C "${BUILD_DIR}" "${LIBPQ_TARGET}"
+        ninja -C "${BUILD_DIR}"
         ;;
 esac
 
