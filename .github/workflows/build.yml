@@ -64,6 +64,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           yum install -y bison flex perl-IPC-Cmd
+          python3 -m ensurepip --upgrade
           python3 -m pip install meson ninja
       - name: Install build tools (macOS)
         if: runner.os == 'macOS'
