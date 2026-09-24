@@ -1,6 +1,9 @@
 name: Build static libpq and publish release assets
 
 on:
+  push:
+     tags:
+       - "pq*"
   workflow_dispatch:
     inputs:
       pg_tag:
@@ -97,6 +100,8 @@ jobs:
   release:
     needs: [prepare, build]
     runs-on: ubuntu-26.04
+    permissions:
+      contents: write
     steps:
       - uses: actions/download-artifact@v4
         with:
