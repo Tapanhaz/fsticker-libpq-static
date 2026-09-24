@@ -60,6 +60,7 @@ echo "==> meson setup"
 meson "${MESON_ARGS[@]}"
 
 echo "==> ninja build (libpq only)"
+ninja -C "${BUILD_DIR}" -t targets | grep -i 'libpq\.a\|libpq\.lib' >&2 || true
 case "${PLATFORM}" in
     windows-*)
         meson compile -C "${BUILD_DIR}"
