@@ -59,30 +59,22 @@ esac
 echo "==> meson setup"
 meson "${MESON_ARGS[@]}"
 
-echo "==> introspecting targets"
-meson introspect --targets "${BUILD_DIR}" | python3 -c "
-import json, sys
-targets = json.load(sys.stdin)
-for t in targets:
-    if 'libpq' in t['name'].lower():
-        print(t['name'], '|', t['id'], '|', t['filename'])
-" >&2 || true
-
 
 echo "==> ninja build (libpq only)"
+LIBPQ_TARGET="src/interfaces/libpq/libpq.a"
 case "${PLATFORM}" in
     windows-*)
-        meson compile -C "${BUILD_DIR}" 
+        meson compile -C "${BUILD_DIR}" "${LIBPQ_TARGET}"
         ;;
     *)
-        ninja -C "${BUILD_DIR}"
+        ninja -C "${BUILD_DIR}" "${LIBPQ_TARGET}"
         ;;
 esac
 
 echo "==> collecting static library"
 case "${PLATFORM}" in
     windows-*)
-        LIB_SRC=$(find "${BUILD_DIR}/src/interfaces/libpq" -maxdepth 1 -name 'libpq.a' -o -name 'libpq.lib' | head -n1)
+        LIB_SRC=$(find "${BUILD_DIR}/src/interfaces/libpq" -maxdepth 1 -name 'libpq.a' | head -n1)
         ;;
     *)
         LIB_SRC=$(find "${BUILD_DIR}/src/interfaces/libpq" -maxdepth 1 -name 'libpq.a' | head -n1)
